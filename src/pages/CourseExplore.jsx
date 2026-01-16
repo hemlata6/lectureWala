@@ -111,6 +111,43 @@ const CourseExplore = ({ course: propCourse, allCourses: propAllCourses, onBack,
     }
   }, [variationsList, validityTypeList, validityDateList, watchTimeList]);
 
+  // Auto-select from finalCoursePricing when it's initially populated
+  useEffect(() => {
+    if (finalCoursePricing.length > 0 && !selectedDuration && !selectedWatchTime) {
+      const firstPricing = finalCoursePricing[0];
+      
+      // Auto-select validity type from first pricing
+      if (!selectedValidityType && firstPricing.validityType) {
+        setSelectedValidityType(firstPricing.validityType);
+      }
+      
+      // Auto-select watch time
+      if (!selectedWatchTime) {
+        if (firstPricing.watchTime) {
+          setSelectedWatchTime(Number(firstPricing.watchTime));
+        } else {
+          setSelectedWatchTime("Unlimited");
+        }
+      }
+    }
+  }, [finalCoursePricing]);
+
+  // Auto-select validity date when validityDateList is populated
+  useEffect(() => {
+    if (validityDateList.length > 0 && !selectedDuration && selectedValidityType && selectedValidityType !== "lifetime") {
+      const firstPricing = finalCoursePricing[0];
+      if (firstPricing) {
+        const durationOrExpiry = selectedValidityType === "validity" 
+          ? formatMilliseconds(firstPricing.duration)
+          : formatTimestamp(firstPricing.expiry);
+        
+        if (durationOrExpiry && durationOrExpiry !== "N/A" && validityDateList.includes(durationOrExpiry)) {
+          setSelectedDuration(durationOrExpiry);
+        }
+      }
+    }
+  }, [validityDateList, selectedValidityType]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -489,6 +526,9 @@ const CourseExplore = ({ course: propCourse, allCourses: propAllCourses, onBack,
   }
 
   console.log('course', course);
+
+  console.log('finalCoursePricing', finalCoursePricing);
+  
 
 
   return (
