@@ -14,9 +14,9 @@
 // const instId = 209;
 
 // psacad
-const instId = 331;
+// const instId = 331;
 
 // lecturWala
-// const instId = 262;
+const instId = 262;
 
 export default instId;
