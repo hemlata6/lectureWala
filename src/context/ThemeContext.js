@@ -231,7 +231,8 @@ const themeMap = {
 export const ThemeProviderWrapper = ({ children }) => {
     const [currentTheme, setCurrentTheme] = useState(() => {
         // Determine default theme based on instId
-        const defaultThemeForInst = instId === 262 ? 'default' : 'logo';
+        // const defaultThemeForInst = instId === 262 ? 'default' : 'logo';
+        const defaultThemeForInst = 'logo';
         
         // Get saved theme from localStorage
         const savedTheme = localStorage.getItem('selectedTheme');
