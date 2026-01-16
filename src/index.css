@@ -1,0 +1,930 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PWA and Mobile App Styles */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Prevent selection and context menu for mobile app feel */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  /* Prevent text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Prevent all elements from overflowing */
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  box-sizing: border-box;
+}
+
+/* Ensure images never overflow their containers */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Remove tap highlight on mobile */
+
+/* Allow text selection for input fields and text areas */
+input,
+textarea,
+[contenteditable] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Fullscreen styles */
+body:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+}
+
+body:-moz-full-screen {
+  width: 100%;
+  height: 100%;
+}
+
+body:-ms-fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+body:fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+.description-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+
+/* iOS Safari specific styles */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* iOS Safari specific fixes */
+    position: fixed;
+    overflow: hidden;
+  }
+
+  #root {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Theme transition styles */
+html,
+body,
+#root {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* CSS Custom Properties for theming */
+:root {
+  --theme-bg-default: #fafafa;
+  --theme-bg-paper: #ffffff;
+  --theme-text-primary: rgba(0, 0, 0, 0.87);
+  --theme-text-secondary: rgba(0, 0, 0, 0.60);
+  --theme-primary: #3f51b5;
+  --theme-primary-light: #5f6fbf;
+  --theme-primary-dark: #2c3aa3;
+  --theme-secondary: #f50057;
+}
+
+/* Black & Yellow Theme Overrides - Dark Mode when data-theme="logo" */
+/* Dark backgrounds */
+[data-theme="logo"] {
+  background-color: #000000 !important;
+}
+
+[data-theme="logo"] body,
+[data-theme="logo"] #root,
+[data-theme="logo"] main {
+  background-color: #000000 !important;
+  color: #E5E5E5 !important;
+}
+
+/* All backgrounds dark */
+[data-theme="logo"] .bg-white,
+[data-theme="logo"] .bg-gray-50,
+[data-theme="logo"] .bg-gray-100,
+[data-theme="logo"] .bg-gray-200 {
+  background-color: #1A1A1A !important;
+  color: #E5E5E5 !important;
+}
+
+/* Sidebar - Only color overrides, keep default structure */
+[data-theme="logo"] .bg-white.shadow-xl {
+  background-color: #1A1A1A !important;
+  border-color: #2A2A2A !important;
+}
+
+[data-theme="logo"] .border-gray-200 {
+  border-color: #2A2A2A !important;
+}
+
+[data-theme="logo"] .text-gray-900 {
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] .text-gray-800 {
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] .text-gray-700 {
+  color: #B0B0B0 !important;
+}
+
+[data-theme="logo"] .text-gray-600 {
+  color: #B0B0B0 !important;
+}
+
+[data-theme="logo"] .text-gray-500 {
+  color: #888888 !important;
+}
+
+[data-theme="logo"] .text-gray-400 {
+  color: #666666 !important;
+}
+
+/* Price gradient text visibility */
+[data-theme="logo"] .bg-clip-text.text-transparent {
+  background: linear-gradient(to right, #FFC107, #FFD54F) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Remove borders from headings */
+[data-theme="logo"] h1,
+[data-theme="logo"] h2,
+[data-theme="logo"] h3,
+[data-theme="logo"] h4,
+[data-theme="logo"] h5,
+[data-theme="logo"] h6 {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Remove borders from price containers */
+[data-theme="logo"] [class*="price"],
+[data-theme="logo"] .text-sm.font-bold,
+[data-theme="logo"] .text-base.font-bold,
+[data-theme="logo"] .font-bold.text-transparent {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Remove borders from course cards and sections */
+[data-theme="logo"] section,
+[data-theme="logo"] .section {
+  border: none !important;
+}
+
+/* Specifically target headings in different sections */
+[data-theme="logo"] .text-center h1,
+[data-theme="logo"] .text-center h2,
+[data-theme="logo"] .text-center h3,
+[data-theme="logo"] .mb-10 h2,
+[data-theme="logo"] .mb-12 h2 {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+/* Card backgrounds and content */
+[data-theme="logo"] .from-white\/95,
+[data-theme="logo"] .to-gray-50\/95,
+[data-theme="logo"] .bg-gradient-to-br {
+  background: #1A1A1A !important;
+}
+
+/* Ensure all card text is visible */
+[data-theme="logo"] .text-gray-800 {
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] .text-gray-700 {
+  color: #B0B0B0 !important;
+}
+
+[data-theme="logo"] .text-gray-600 {
+  color: #B0B0B0 !important;
+}
+
+[data-theme="logo"] .text-gray-500 {
+  color: #888888 !important;
+}
+
+/* Dialog and modal backgrounds */
+[data-theme="logo"] .from-gray-50,
+[data-theme="logo"] .to-gray-100 {
+  background: #1A1A1A !important;
+}
+
+[data-theme="logo"] .bg-white\/90 {
+  background-color: #1A1A1A !important;
+}
+
+/* HTML content in dialogs */
+[data-theme="logo"] .html-content,
+[data-theme="logo"] .html-content p {
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] .html-content strong {
+  color: #FFC107 !important;
+}
+
+[data-theme="logo"] .html-content a {
+  color: #FFD54F !important;
+}
+
+[data-theme="logo"] .html-content a:hover {
+  color: #FFC107 !important;
+}
+
+/* My Purchases Page Styling */
+[data-theme="logo"] .bg-gray-50 {
+  background-color: #0A0A0A !important;
+}
+
+/* Course cards styling */
+[data-theme="logo"] .from-white\/95.to-gray-50\/95 {
+  background: linear-gradient(to bottom right, #1A1A1A, #0F0F0F) !important;
+  border-color: #2A2A2A !important;
+}
+
+[data-theme="logo"] .from-gray-50.to-gray-100 {
+  background: #1A1A1A !important;
+}
+
+[data-theme="logo"] .from-blue-50.to-purple-50 {
+  background: linear-gradient(to bottom right, #2A2A2A, #1A1A1A) !important;
+}
+
+/* Headings in My Purchases */
+[data-theme="logo"] .text-gray-900 {
+  color: #FFC107 !important;
+}
+
+/* Course title and description colors */
+[data-theme="logo"] .text-gray-800 {
+  color: #FFC107 !important;
+}
+
+[data-theme="logo"] .text-gray-700 {
+  color: #FFD54F !important;
+}
+
+[data-theme="logo"] .text-gray-600 {
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] .text-gray-500 {
+  color: #B0B0B0 !important;
+}
+
+/* Sidebar hover background */
+[data-theme="logo"] .hover\:bg-gray-100:hover {
+  background-color: #2A2A2A !important;
+}
+
+/* Active menu item - blue to yellow */
+[data-theme="logo"] .bg-blue-100 {
+  background-color: rgba(255, 193, 7, 0.15) !important;
+}
+
+[data-theme="logo"] .text-blue-700 {
+  color: #FFC107 !important;
+}
+
+[data-theme="logo"] .border-blue-700 {
+  border-color: #FFC107 !important;
+}
+
+/* User avatar background */
+[data-theme="logo"] .bg-blue-600 {
+  background-color: #FFC107 !important;
+}
+
+/* YouTube and Sign Out buttons */
+[data-theme="logo"] .text-red-600 {
+  color: #FFC107 !important;
+}
+
+[data-theme="logo"] .hover\:bg-red-50:hover {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+/* Fix dropdown menus - dark background with visible text */
+[data-theme="logo"] .bg-white.absolute,
+[data-theme="logo"] .bg-white.z-10,
+[data-theme="logo"] div[class*="absolute"] .bg-white,
+[data-theme="logo"] ul.bg-white,
+[data-theme="logo"] [role="menu"].bg-white {
+  background-color: #1A1A1A !important;
+  color: #E5E5E5 !important;
+  border-color: #2A2A2A !important;
+}
+
+/* Dropdown items text visibility */
+[data-theme="logo"] ul li,
+[data-theme="logo"] [role="menuitem"] {
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] ul li:hover,
+[data-theme="logo"] [role="menuitem"]:hover {
+  background-color: #2A2A2A !important;
+  color: #FFC107 !important;
+}
+
+/* Force ALL white backgrounds to dark - aggressive override */
+[data-theme="logo"] .bg-white,
+[data-theme="logo"] div.bg-white,
+[data-theme="logo"] div > div.bg-white,
+[data-theme="logo"] div.absolute div,
+[data-theme="logo"] .absolute .bg-white,
+[data-theme="logo"] [class*="bg-white"],
+[data-theme="logo"] div[class*="bg-white"],
+[data-theme="logo"] span[class*="bg-white"],
+[data-theme="logo"] ul[class*="bg-white"] {
+  background-color: #1A1A1A !important;
+}
+
+/* Target gradient backgrounds in dropdowns */
+[data-theme="logo"] [class*="from-indigo-50"],
+[data-theme="logo"] [class*="from-amber-50"],
+[data-theme="logo"] [class*="from-orange-50"],
+[data-theme="logo"] [class*="from-blue-50"],
+[data-theme="logo"] [class*="to-indigo-50"],
+[data-theme="logo"] [class*="to-amber-50"],
+[data-theme="logo"] [class*="to-orange-50"],
+[data-theme="logo"] [class*="to-blue-50"] {
+  background: #1A1A1A !important;
+}
+
+/* Submenu border colors for different sections */
+[data-theme="logo"] .border-indigo-200 {
+  border-color: #FFC107 !important;
+}
+
+[data-theme="logo"] .border-amber-200 {
+  border-color: #FFC107 !important;
+}
+
+/* Dropdown hover states with gradients */
+[data-theme="logo"] .hover\:from-blue-50:hover,
+[data-theme="logo"] .hover\:from-indigo-50:hover,
+[data-theme="logo"] .hover\:to-blue-50:hover,
+[data-theme="logo"] .hover\:to-indigo-50:hover {
+  background: rgba(255, 193, 7, 0.1) !important;
+}
+
+/* All text in absolute positioned elements (dropdowns) */
+[data-theme="logo"] .absolute,
+[data-theme="logo"] .absolute *,
+[data-theme="logo"] div[class*="absolute"],
+[data-theme="logo"] div[class*="absolute"] *,
+[data-theme="logo"] .z-10,
+[data-theme="logo"] .z-10 *,
+[data-theme="logo"] .z-20,
+[data-theme="logo"] .z-20 *,
+[data-theme="logo"] .z-50,
+[data-theme="logo"] .z-50 * {
+  color: #E5E5E5 !important;
+}
+
+/* Target dropdowns by position */
+[data-theme="logo"] div[class*="absolute"][class*="bg-white"],
+[data-theme="logo"] div[class*="fixed"][class*="bg-white"],
+[data-theme="logo"] .absolute > div,
+[data-theme="logo"] .fixed > div {
+  background-color: #1A1A1A !important;
+}
+
+/* Ensure list items and links are visible */
+[data-theme="logo"] li,
+[data-theme="logo"] li a,
+[data-theme="logo"] li button,
+[data-theme="logo"] li span,
+[data-theme="logo"] li p,
+[data-theme="logo"] li div {
+  color: #E5E5E5 !important;
+  background-color: transparent !important;
+}
+
+/* Dropdown items - thin border highlight */
+[data-theme="logo"] nav button,
+[data-theme="logo"] .space-y-1 button,
+[data-theme="logo"] .space-y-2 button {
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+}
+
+[data-theme="logo"] nav button:hover,
+[data-theme="logo"] .space-y-1 button:hover,
+[data-theme="logo"] .space-y-2 button:hover {
+  border-color: #FFC107 !important;
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+/* Cards - clean minimal design */
+[data-theme="logo"] .bg-white\/80,
+[data-theme="logo"] .bg-white\/90 {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2A2A2A !important;
+  border-left: 3px solid #FFC107 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] .bg-white\/80:hover,
+[data-theme="logo"] .bg-white\/90:hover {
+  border-color: #3A3A3A !important;
+  border-left-color: #FFD54F !important;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15) !important;
+  transform: translateY(-2px);
+}
+
+/* Override gradient backgrounds for theme consistency */
+[data-theme="logo"] .from-blue-500,
+[data-theme="logo"] .from-blue-600 {
+  background: linear-gradient(to bottom right, #2A2A2A, #1A1A1A) !important;
+  border: 1px solid #FFC107 !important;
+}
+
+[data-theme="logo"] .from-purple-500,
+[data-theme="logo"] .from-purple-600 {
+  background: linear-gradient(to bottom right, #2A2A2A, #1A1A1A) !important;
+  border: 1px solid #FFC107 !important;
+}
+
+[data-theme="logo"] .from-pink-500,
+[data-theme="logo"] .from-pink-600 {
+  background: linear-gradient(to bottom right, #2A2A2A, #1A1A1A) !important;
+  border: 1px solid #666666 !important;
+  opacity: 0.7 !important;
+}
+
+[data-theme="logo"] .from-green-500,
+[data-theme="logo"] .from-green-600 {
+  background: linear-gradient(to bottom right, #2A2A2A, #1A1A1A) !important;
+  border: 1px solid #FFC107 !important;
+}
+
+/* Hover states for cards */
+[data-theme="logo"] .hover\:from-blue-600:hover,
+[data-theme="logo"] .hover\:from-purple-600:hover,
+[data-theme="logo"] .hover\:from-pink-600:hover,
+[data-theme="logo"] .hover\:from-green-600:hover {
+  background: linear-gradient(to bottom right, #FFC107, #FFB300) !important;
+  border-color: #FFD54F !important;
+}
+
+/* Text colors */
+[data-theme="logo"] .text-gray-900,
+[data-theme="logo"] .text-gray-800,
+[data-theme="logo"] .text-gray-700 {
+  color: #FFFFFF !important;
+}
+
+[data-theme="logo"] .text-gray-600,
+[data-theme="logo"] .text-gray-500,
+[data-theme="logo"] .text-gray-400 {
+  color: #B0B0B0 !important;
+}
+
+/* Yellow accent text */
+[data-theme="logo"] .text-indigo-600,
+[data-theme="logo"] .text-blue-600,
+[data-theme="logo"] .text-purple-600 {
+  color: #FFC107 !important;
+}
+
+/* Buttons - clean gradient design */
+[data-theme="logo"] .bg-indigo-600,
+[data-theme="logo"] .bg-blue-600,
+[data-theme="logo"] .bg-purple-600,
+[data-theme="logo"] button.bg-indigo-600,
+[data-theme="logo"] button.bg-blue-600,
+[data-theme="logo"] a.bg-indigo-600,
+[data-theme="logo"] a.bg-blue-600 {
+  background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%) !important;
+  color: #000000 !important;
+  font-weight: 600 !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25) !important;
+  transition: all 0.3s ease;
+}
+
+[data-theme="logo"] .hover\:bg-indigo-700:hover,
+[data-theme="logo"] .hover\:bg-blue-700:hover,
+[data-theme="logo"] button.bg-indigo-600:hover,
+[data-theme="logo"] button.bg-blue-600:hover,
+[data-theme="logo"] a.bg-indigo-600:hover,
+[data-theme="logo"] a.bg-blue-600:hover {
+  background: linear-gradient(135deg, #FFD54F 0%, #FFC107 100%) !important;
+  box-shadow: 0 4px 16px rgba(255, 193, 7, 0.35) !important;
+  transform: translateY(-2px);
+}
+
+/* Borders - minimal and subtle */
+[data-theme="logo"] .border-indigo-600,
+[data-theme="logo"] .border-blue-600,
+[data-theme="logo"] .border-purple-600 {
+  border-color: rgba(255, 193, 7, 0.3) !important;
+}
+
+[data-theme="logo"] .border-gray-200,
+[data-theme="logo"] .border-gray-300 {
+  border-color: #2A2A2A !important;
+}
+
+/* Headings */
+[data-theme="logo"] h1,
+[data-theme="logo"] h2 {
+  color: #FFC107 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="logo"] h3,
+[data-theme="logo"] h4,
+[data-theme="logo"] h5,
+[data-theme="logo"] h6 {
+  color: #FFFFFF !important;
+}
+
+/* Input fields */
+[data-theme="logo"] input,
+[data-theme="logo"] textarea,
+[data-theme="logo"] select {
+  background-color: #1A1A1A !important;
+  color: #E5E5E5 !important;
+  border: 1px solid #2A2A2A !important;
+}
+
+[data-theme="logo"] input:focus,
+[data-theme="logo"] textarea:focus,
+[data-theme="logo"] select:focus {
+  border-color: #FFC107 !important;
+  box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.1) !important;
+  outline: none !important;
+}
+
+/* Links */
+[data-theme="logo"] a {
+  color: #FFC107 !important;
+}
+
+[data-theme="logo"] a:hover {
+  color: #FFD54F !important;
+}
+
+/* Icons should be visible */
+[data-theme="logo"] svg,
+[data-theme="logo"] [class*="icon"],
+[data-theme="logo"] [class*="Icon"] {
+  color: inherit !important;
+}
+
+/* Rounded elements */
+[data-theme="logo"] .rounded-lg,
+[data-theme="logo"] .rounded-xl,
+[data-theme="logo"] .rounded-2xl {
+  border: 1px solid #2A2A2A !important;
+  background-color: #1A1A1A !important;
+}
+
+[data-theme="logo"] .rounded-lg:hover,
+[data-theme="logo"] .rounded-xl:hover,
+[data-theme="logo"] .rounded-2xl:hover {
+  border-color: rgba(255, 193, 7, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.1) !important;
+}
+
+/* ========================================
+   CART PAGE SPECIFIC STYLING
+   Only affects CartPage.jsx component
+   ======================================== */
+
+/* Cart Page Background */
+[data-theme="logo"] .cart-page-wrapper {
+  background: #0A0A0A !important;
+}
+
+/* Cart Page Typography - Yellow Headers and Light Text */
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-h5,
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-h6 {
+  color: #FFC107 !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+}
+
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-body1,
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-body2 {
+  color: #E5E5E5 !important;
+}
+
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-root {
+  color: #E5E5E5 !important;
+}
+
+/* Cart Page Secondary Text */
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-root[color="text.secondary"] {
+  color: #B0B0B0 !important;
+}
+
+/* Cart Page Containers - Dark Backgrounds */
+[data-theme="logo"] .cart-page-wrapper .MuiBox-root {
+  background: transparent !important;
+}
+
+[data-theme="logo"] .cart-page-wrapper > .MuiBox-root {
+  background: #0A0A0A !important;
+}
+
+/* Cart Page Cards */
+[data-theme="logo"] .cart-page-wrapper .MuiCard-root {
+  background-color: #1A1A1A !important;
+  border: 1px solid #2A2A2A !important;
+}
+
+[data-theme="logo"] .cart-page-wrapper .MuiCardContent-root {
+  background-color: #1A1A1A !important;
+}
+
+/* Cart Page Paper Elements (Summary Sidebar) */
+[data-theme="logo"] .cart-page-wrapper .MuiPaper-root {
+  background-color: #1A1A1A !important;
+  border: 1px solid #FFC107 !important;
+}
+
+/* Cart Page Price Display */
+[data-theme="logo"] .cart-page-wrapper .MuiBox-root[sx*="inline-block"] {
+  background: linear-gradient(135deg, #FFC107 0%, #FFB300 100%) !important;
+  color: #000000 !important;
+}
+
+/* Cart Page Buttons */
+[data-theme="logo"] .cart-page-wrapper .MuiButton-contained {
+  background: linear-gradient(135deg, #FFC107 0%, #FFB300 100%) !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="logo"] .cart-page-wrapper .MuiButton-contained:hover {
+  background: linear-gradient(135deg, #FFD54F 0%, #FFC107 100%) !important;
+}
+
+[data-theme="logo"] .cart-page-wrapper .MuiButton-contained:disabled {
+  background: linear-gradient(135deg, #FFC107 0%, #FFB300 100%) !important;
+  opacity: 0.6 !important;
+}
+
+/* Cart Page Dividers */
+[data-theme="logo"] .cart-page-wrapper .MuiDivider-root {
+  border-color: #2A2A2A !important;
+}
+
+/* Cart Page Summary Section Headers */
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-h6[fontWeight="700"] {
+  color: #FFC107 !important;
+  font-weight: 700 !important;
+}
+
+/* Cart Page Gradient Text Override */
+[data-theme="logo"] .cart-page-wrapper .MuiTypography-root[sx*="gradient"] {
+  color: #FFC107 !important;
+  background: linear-gradient(135deg, #FFC107 0%, #FFD54F 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Store Page - Courses Scroll Container */
+.store-courses-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.store-courses-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.store-courses-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.store-courses-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.store-courses-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Black & Yellow Theme - Store Page Scroll */
+[data-theme="logo"] .store-courses-scroll {
+  scrollbar-color: #FFC107 #1A1A1A;
+}
+
+[data-theme="logo"] .store-courses-scroll::-webkit-scrollbar-track {
+  background: #1A1A1A;
+}
+
+[data-theme="logo"] .store-courses-scroll::-webkit-scrollbar-thumb {
+  background: #FFC107;
+}
+
+[data-theme="logo"] .store-courses-scroll::-webkit-scrollbar-thumb:hover {
+  background: #FFD54F;
+}
+
+/* Store Page - Filter Sections (Black & Yellow Theme) */
+/* Fix hover text visibility in Exam Type, Exam Stage, Faculty filters */
+
+/* Hover background for filter items */
+[data-theme="logo"] .hover\:bg-gray-50:hover {
+  background-color: #2A2A2A !important;
+}
+
+[data-theme="logo"] .hover\:bg-blue-50:hover {
+  background-color: #2A2A2A !important;
+}
+
+/* Active/Selected filter items - keep yellow text visible */
+[data-theme="logo"] .text-gray-900 {
+  color: #FFC107 !important;
+}
+
+/* Hover state text - make it lighter yellow for better visibility */
+[data-theme="logo"] .group:hover .group-hover\:text-gray-900 {
+  color: #FFD54F !important;
+}
+
+/* Non-selected filter items default text */
+[data-theme="logo"] .text-gray-600 {
+  color: #B0B0B0 !important;
+}
+
+/* Filter section headers */
+[data-theme="logo"] .text-gray-500 {
+  color: #888888 !important;
+}
+
+/* Faculty "Select All" / "Deselect All" text */
+[data-theme="logo"] .text-gray-700 {
+  color: #B0B0B0 !important;
+}
+
+/* Border colors in filters */
+[data-theme="logo"] .border-gray-100 {
+  border-color: #2A2A2A !important;
+}
+
+[data-theme="logo"] .border-gray-300 {
+  border-color: #444444 !important;
+}
+
+/* Filter icon colors */
+[data-theme="logo"] .text-blue-500 {
+  color: #FFC107 !important;
+}
+
+[data-theme="logo"] .text-blue-600 {
+  color: #FFC107 !important;
+}
+
+/* Radio button and checkbox colors */
+[data-theme="logo"] .border-blue-500 {
+  border-color: #FFC107 !important;
+}
+
+[data-theme="logo"] .bg-blue-500 {
+  background-color: #FFC107 !important;
+}
+
+[data-theme="logo"] .group-hover\:border-blue-400:hover {
+  border-color: #FFD54F !important;
+}
+
+/* Support Section - Black & Yellow Theme Separation */
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 {
+  background: #000000 !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+  border-top: 2px solid #FFC107 !important;
+  border-bottom: 2px solid #FFC107 !important;
+}
+
+/* Support Section - Inner content styling */
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-white {
+  background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%) !important;
+  border: 2px solid #FFC107 !important;
+}
+
+/* Support Section - Heading gradient text */
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-gradient-to-r.from-blue-600.via-purple-600.to-pink-600 {
+  background: linear-gradient(to right, #FFC107, #FFD54F) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* Support Section - Description text */
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .text-gray-600 {
+  color: #E5E5E5 !important;
+}
+
+/* Support Section - Feature badges */
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-green-50 {
+  background: rgba(255, 193, 7, 0.1) !important;
+  border-color: #FFC107 !important;
+}
+
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .text-green-700 {
+  color: #FFD54F !important;
+}
+
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-blue-50 {
+  background: rgba(255, 193, 7, 0.1) !important;
+  border-color: #FFC107 !important;
+}
+
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .text-blue-700 {
+  color: #FFD54F !important;
+}
+
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-purple-50 {
+  background: rgba(255, 193, 7, 0.1) !important;
+  border-color: #FFC107 !important;
+}
+
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .text-purple-700 {
+  color: #FFD54F !important;
+}
+
+/* Support Section - Badge dots */
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-green-500,
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-blue-500,
+[data-theme="logo"] .bg-gradient-to-br.from-blue-50.via-purple-50.to-pink-50 .bg-purple-500 {
+  background: #FFC107 !important;
+}
+
+/* Sidebar Header - Dark Theme Background */
+[data-theme="logo"] .border-b.border-gray-200 {
+  background-color: #dddd81 !important;
+  border-color: #FFC107 !important;
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/classioLogo.png" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#4f46e5" />
+  <meta name="description" content="Classio Quiz Panel - Interactive Learning Management System for Students" />
+
+  <!-- PWA Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Classio Quiz">
+  <meta name="application-name" content="Classio Quiz">
+  <meta name="msapplication-TileColor" content="#4f46e5">
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/classioLogo.png" />
+  <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+  <title>PS Academy</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+
+  <!-- Dynamic Title Update -->
+  <script>
+    // Store a function to be called by React when it initializes
+    window.updateDocumentTitle = function(instId) {
+      const title = instId === 331 ? "PS Academy App" : instId === 262 ? "LecturWala App" : "Other App";
+      document.title = title;
+    };
+
+    function updatePageTitle() {
+      try {
+        // Try to get instId from window object (set by React)
+        if (window.appInstId !== undefined) {
+          window.updateDocumentTitle(window.appInstId);
+          return;
+        }
+
+        // Fallback: Get from localStorage/sessionStorage
+        const instId = parseInt(localStorage.getItem('instId')) || parseInt(sessionStorage.getItem('instId'));
+        if (instId) {
+          window.updateDocumentTitle(instId);
+        }
+      } catch (error) {
+        console.log('Error updating title:', error);
+      }
+    }
+
+    // Update title on page load
+    window.addEventListener('load', updatePageTitle);
+    
+    // Also watch for instId changes in storage
+    window.addEventListener('storage', updatePageTitle);
+  </script>
+
+  <!-- Fullscreen and PWA functionality -->
+  <script>
+    // Enable fullscreen mode when app loads
+    function enableFullscreen() {
+      const elem = document.documentElement;
+
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => {
+          console.log('Error attempting to enable fullscreen:', err.message);
+        });
+      } else if (elem.mozRequestFullScreen) { /* Firefox */
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE/Edge */
+        elem.msRequestFullscreen();
+      }
+    }
+
+    // PWA install handling
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+
+      // Show install button or banner if needed
+      console.log('PWA install prompt ready');
+    });
+
+    // Auto-enable fullscreen on mobile devices
+    window.addEventListener('load', () => {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      
+      // Check if user is on Store or Cart route - don't enable fullscreen on these routes
+      const currentPath = window.location.pathname;
+      const isStoreOrCart = currentPath.includes('/store') || currentPath.includes('/cart');
+
+      if (isMobile && !isStandalone && !isStoreOrCart) {
+        // Add a small delay to ensure the page is fully loaded
+        setTimeout(() => {
+          // Request fullscreen on first user interaction
+          document.addEventListener('click', enableFullscreen, { once: true });
+          document.addEventListener('touchstart', enableFullscreen, { once: true });
+        }, 1000);
+      }
+    });
+
+    // Handle fullscreen exit
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        console.log('Exited fullscreen mode');
+      }
+    });
+
+    // Prevent zoom on double tap (mobile app-like behavior)
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+
+    // Register Service Worker with proper cache handling
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+
+            // Check for updates every time the app loads
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New version available, force refresh
+                  console.log('New version available, refreshing...');
+                  window.location.reload();
+                }
+              });
+            });
+
+            // Force update check
+            registration.update();
+          })
+          .catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+  </script>
+</body>
+
+</html>
