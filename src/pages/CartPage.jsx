@@ -241,6 +241,10 @@ const CartPage = ({ onQuizNavigation }) => {
     useEffect(() => {
         if (cartCourses.length > 0) {
             separateCourses();
+        } else {
+            // Clear both arrays when cart is empty
+            setRegularCourses([]);
+            setDripCourses([]);
         }
     }, [cartCourses]);
 
@@ -710,7 +714,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                 <Typography variant="caption" sx={{ display: 'block', color: '#7a869a', fontWeight: 600, mb: 0.5, fontSize: '0.65rem', textTransform: 'uppercase' }}>
                                                                     Available Options
                                                                 </Typography>
-                                                                {item?.coursePricing.map((pricing, pricingIndex) => (
+                                                                {item?.coursePricing.filter(pricing => pricing.id === item.coursePricingId).map((pricing, pricingIndex) => (
                                                                     <Stack direction="column" spacing={0.5} sx={{ mb: 0.5 }} key={pricingIndex}>
 
                                                                         {getLearningModeLabel(pricing) !== "N/A" && (
