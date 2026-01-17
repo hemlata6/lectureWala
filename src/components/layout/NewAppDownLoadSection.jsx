@@ -114,7 +114,7 @@ const AppShowcaseSection = () => {
                                 <Box
                                     component="span"
                                     sx={{
-                                        background: theme.palette.mode === 'dark' 
+                                        background: theme.palette.mode === 'dark'
                                             ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
                                             : 'linear-gradient(135deg, #FFFFFF 0%, #F0F5FB 100%)',
                                         WebkitBackgroundClip: 'text',
@@ -363,7 +363,7 @@ const AppShowcaseSection = () => {
                                                     color: 'white',
                                                 }}
                                             >
-                                                {instId === 331 ? "PS Academy App" : instId === 262 ? "LecturWala App" : "Other App"}
+                                                {instId === 331 ? "PS Academy App" : instId === 262 ? "LecturWala App" : instId === 340 ? " Avj Academy" : "Classio Panel"}
                                             </Typography>
 
                                             <Typography
