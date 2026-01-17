@@ -56,6 +56,7 @@ const SuggestedCourseDialog = ({ addedSuggestCourse, handleClose, onFinalAmountU
     const finalPrice = price - discountedAmount;
     const taxLabAmount = (finalPrice * taxLab) / 100;
     const finalAmount = finalPrice + taxLabAmount;
+console.log('finalCoursePricing', finalCoursePricing);
 
 
     useEffect(() => {
@@ -354,6 +355,8 @@ const SuggestedCourseDialog = ({ addedSuggestCourse, handleClose, onFinalAmountU
 
                 const updatedCart = [...prevCart, updatedCourse];
                 updateFinalAmount(updatedCart);
+                console.log('updatedCart', updatedCart);
+
                 localStorage.setItem('cartCourses', JSON.stringify(updatedCart));
                 window.dispatchEvent(new Event('cartUpdated'));
 

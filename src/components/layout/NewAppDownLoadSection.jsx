@@ -32,12 +32,26 @@ const AppShowcaseSection = () => {
         "⏰ Smart Notifications & Reminders",
     ];
 
+    // Determine background gradient based on theme
+    const getBackgroundGradient = () => {
+        if (theme.palette.mode === 'dark') {
+            // Dark theme - keep dark gradient
+            return 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%)';
+        } else if (theme.palette.primary.main === '#158ff0') {
+            // Light blue theme - use light blue gradient
+            return 'linear-gradient(135deg, #0D6BB8 0%, #158ff0 50%, #4DA8F7 100%)';
+        } else {
+            // Default light theme - keep blue gradient
+            return 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%)';
+        }
+    };
+
     return (
         <Box
             ref={ref}
             sx={{
                 py: { xs: 4, md: 4 },
-                background: 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%)',
+                background: getBackgroundGradient(),
                 position: 'relative',
                 overflow: 'hidden',
             }}
@@ -100,7 +114,9 @@ const AppShowcaseSection = () => {
                                 <Box
                                     component="span"
                                     sx={{
-                                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                                        background: theme.palette.mode === 'dark' 
+                                            ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)'
+                                            : 'linear-gradient(135deg, #FFFFFF 0%, #F0F5FB 100%)',
                                         WebkitBackgroundClip: 'text',
                                         WebkitTextFillColor: 'transparent',
                                         backgroundClip: 'text',

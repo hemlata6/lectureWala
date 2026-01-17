@@ -212,30 +212,222 @@ const logoTheme = createTheme({
     },
 });
 
+// Light Blue Professional Theme
+const lightBlueTheme = createTheme({
+    palette: {
+        mode: 'light',
+        primary: {
+            main: '#158ff0', // Primary Light Blue
+            light: '#4DA8F7',
+            dark: '#0D6BB8',
+        },
+        secondary: {
+            main: '#FF6B6B', // Coral Red accent
+            light: '#FF8E8E',
+            dark: '#E63946',
+        },
+        background: {
+            default: '#F8FCFF', // Light blue background
+            paper: '#FFFFFF',
+        },
+        text: {
+            primary: '#1A1A1A',
+            secondary: 'rgba(26, 26, 26, 0.70)',
+        },
+        success: {
+            main: '#4caf50',
+        },
+        warning: {
+            main: '#ff9800',
+        },
+        error: {
+            main: '#f44336',
+        },
+        info: {
+            main: '#158ff0',
+        },
+    },
+    typography: {
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        h1: {
+            color: '#158ff0',
+            fontWeight: 700,
+        },
+        h2: {
+            color: '#158ff0',
+            fontWeight: 700,
+        },
+        h3: {
+            color: '#0D6BB8',
+            fontWeight: 600,
+        },
+        h4: {
+            color: '#1A1A1A',
+            fontWeight: 600,
+        },
+        h5: {
+            color: '#1A1A1A',
+            fontWeight: 600,
+        },
+        h6: {
+            color: '#1A1A1A',
+            fontWeight: 500,
+        },
+    },
+    components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    borderRadius: '6px',
+                },
+                contained: {
+                    backgroundColor: '#158ff0',
+                    color: '#FFFFFF',
+                    boxShadow: '0 2px 8px rgba(21, 143, 240, 0.3)',
+                    '&:hover': {
+                        backgroundColor: '#0D6BB8',
+                        boxShadow: '0 4px 12px rgba(21, 143, 240, 0.4)',
+                    },
+                },
+                outlined: {
+                    borderColor: '#158ff0',
+                    color: '#158ff0',
+                    '&:hover': {
+                        borderColor: '#0D6BB8',
+                        backgroundColor: 'rgba(21, 143, 240, 0.05)',
+                    },
+                },
+            },
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#FFFFFF',
+                    color: '#158ff0',
+                    borderBottom: '2px solid #158ff0',
+                    boxShadow: '0 2px 8px rgba(21, 143, 240, 0.1)',
+                },
+            },
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #E0E8F5',
+                    boxShadow: '0 2px 8px rgba(21, 143, 240, 0.08)',
+                    borderRadius: '8px',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                        boxShadow: '0 4px 16px rgba(21, 143, 240, 0.15)',
+                        transform: 'translateY(-2px)',
+                    },
+                },
+            },
+        },
+        MuiDataGrid: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#FFFFFF',
+                    color: '#1A1A1A',
+                    border: '1px solid #E0E8F5',
+                    '& .MuiDataGrid-columnHeader': {
+                        backgroundColor: '#F0F5FB',
+                        color: '#158ff0',
+                        borderBottom: '2px solid #158ff0',
+                    },
+                    '& .MuiDataGrid-cell': {
+                        color: '#1A1A1A',
+                        borderColor: '#E0E8F5',
+                    },
+                    '& .MuiDataGrid-footerContainer': {
+                        backgroundColor: '#F0F5FB',
+                        borderTop: '2px solid #158ff0',
+                    },
+                },
+            },
+        },
+        MuiInputBase: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#F8FCFF',
+                    color: '#1A1A1A',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#D0DDED',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#158ff0',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#158ff0',
+                        borderWidth: '2px',
+                    },
+                },
+            },
+        },
+        MuiDialog: {
+            styleOverrides: {
+                paper: {
+                    backgroundColor: '#FFFFFF',
+                    borderTop: '4px solid #158ff0',
+                    color: '#1A1A1A',
+                    boxShadow: '0 8px 24px rgba(21, 143, 240, 0.15)',
+                },
+            },
+        },
+        MuiSelect: {
+            styleOverrides: {
+                root: {
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#D0DDED',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#158ff0',
+                    },
+                },
+            },
+        },
+    },
+});
+
 // Theme list for dropdown
 export const THEMES = {
     DEFAULT: 'logo',
     LOGO: 'default',
+    LIGHTBLUE: 'lightblue',
 };
 
 export const THEME_NAMES = {
     'default': 'Light',
     'logo': 'Dark',
+    'lightblue': 'Light Blue Professional',
 };
 
 const themeMap = {
     'default': defaultTheme,
     'logo': logoTheme,
+    'lightblue': lightBlueTheme,
 };
 
 export const ThemeProviderWrapper = ({ children }) => {
     const [currentTheme, setCurrentTheme] = useState(() => {
         // Determine default theme based on instId
-        // const defaultThemeForInst = instId === 262 ? 'default' : 'logo';
-        const defaultThemeForInst = 'logo';
+        let defaultThemeForInst = 'logo'; // Default for most institutes
+        
+        // Set specific theme for specific institutes
+        if (instId === 340) {
+            defaultThemeForInst = 'lightblue';
+        }
         
         // Get saved theme from localStorage
         const savedTheme = localStorage.getItem('selectedTheme');
+
+        // If instId is 340, always use lightblue theme (ignore localStorage)
+        if (instId === 340) {
+            localStorage.setItem('selectedTheme', 'lightblue');
+            return 'lightblue';
+        }
 
         // If no saved theme exists, set it to the default for this institute
         if (!savedTheme) {

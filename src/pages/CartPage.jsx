@@ -41,6 +41,23 @@ const CartPage = ({ onQuizNavigation }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [isCouponValid, setIsCouponValid] = useState(null);
     const isLogoTheme = currentTheme === 'logo';
+    const isLightBlueTheme = currentTheme === 'lightblue';
+
+    // Get theme-aware colors
+    const getPrimaryColor = () => {
+        if (tokenFromUrl) return '#ffb610';
+        if (isLightBlueTheme) return '#158ff0';
+        return '#667eea';
+    };
+
+    const getSecondaryColor = () => {
+        if (tokenFromUrl) return '#ffb610';
+        if (isLightBlueTheme) return '#0D6BB8';
+        return '#764ba2';
+    };
+
+    const primaryColor = getPrimaryColor();
+    const secondaryColor = getSecondaryColor();
 
     // console.log('paymentUrl===cartttt', paymentUrl, checkoutResponse);
     // console.log('cartCourses', cartCourses);
@@ -241,6 +258,10 @@ const CartPage = ({ onQuizNavigation }) => {
     useEffect(() => {
         if (cartCourses.length > 0) {
             separateCourses();
+        } else {
+            // Clear both arrays when cart is empty
+            setRegularCourses([]);
+            setDripCourses([]);
         }
     }, [cartCourses]);
 
@@ -304,9 +325,27 @@ const CartPage = ({ onQuizNavigation }) => {
     };
 
     const handleRemoveRegularCourse = (index) => {
-        const updatedCart = cartCourses.filter((item, i) => {
-            if (item.plan) return true; // Keep drip courses
-            return regularCourses.indexOf(item) !== index;
+        // Get the course to remove from regularCourses array
+        const courseToRemove = regularCourses[index];
+
+        if (!courseToRemove) {
+            console.error('Course to remove not found at index:', index);
+            return;
+        }
+
+        // Filter out the course from cartCourses
+        const updatedCart = cartCourses.filter((item) => {
+            // Keep all drip courses (items with plan)
+            if (item.plan) return true;
+
+            // For regular courses, check if it's NOT the one to remove
+            // Use strict comparison with both id and coursePricingId
+            const isSameCourse = (
+                item.id === courseToRemove.id &&
+                item.coursePricingId === courseToRemove.coursePricingId
+            );
+
+            return !isSameCourse;
         });
 
         setCartCourses(updatedCart);
@@ -504,21 +543,16 @@ const CartPage = ({ onQuizNavigation }) => {
 
             const { type, url, data } = event.data;
 
-            console.log('Message received from iframe:', event.data);
 
             if (type === 'paymentUrl' && url) {
-                console.log('Payment gateway sent new URL:', url);
                 setPaymentUrl(url);
                 sessionStorage.setItem('iframeNewUrl', url);
             } else if (type === 'paymentData' && data) {
-                console.log('Payment data received:', data);
                 sessionStorage.setItem('paymentData', JSON.stringify(data));
             } else if (type === 'redirectUrl' && url) {
-                console.log('Redirect URL from payment gateway:', url);
                 setPaymentUrl(url);
                 sessionStorage.setItem('paymentRedirectUrl', url);
             } else if (type === 'paymentSuccess') {
-                console.log('Payment completed successfully');
                 sessionStorage.setItem('paymentStatus', 'completed');
                 sessionStorage.setItem('paymentResponse', JSON.stringify(data || {}));
             }
@@ -590,11 +624,18 @@ const CartPage = ({ onQuizNavigation }) => {
         return modes.length > 0 ? modes.join(" + ") : "N/A";
     };
 
+    // console.log('regularCourses', regularCourses);
+
+
     return (
         <Box
             className="cart-page-wrapper"
             sx={{
-                background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                background: isLightBlueTheme
+                    ? 'linear-gradient(135deg, #F8FCFF 0%, #EFF5FB 100%)'
+                    : isLogoTheme
+                        ? 'linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%)'
+                        : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
                 py: { xs: 3, md: 5 },
                 px: { xs: 2, sm: 3, md: 6, lg: 8 }
             }}
@@ -619,7 +660,7 @@ const CartPage = ({ onQuizNavigation }) => {
                         }}
                         startIcon={<ArrowRight size={20} style={{ transform: 'rotate(180deg)' }} />}
                         sx={{
-                            color: tokenFromUrl ? '#ffb610' : '#667eea',
+                            color: primaryColor,
                             textTransform: 'none',
                             fontWeight: 600,
                             fontSize: '0.95rem',
@@ -627,8 +668,8 @@ const CartPage = ({ onQuizNavigation }) => {
                             py: 1,
                             borderRadius: '8px',
                             '&:hover': {
-                                background: tokenFromUrl ? 'rgba(255, 182, 16, 0.1)' : 'rgba(102, 126, 234, 0.1)',
-                                color: tokenFromUrl ? '#ffb610' : '#764ba2',
+                                background: `${primaryColor}15`,
+                                color: secondaryColor,
                             },
                         }}
                     >
@@ -642,7 +683,7 @@ const CartPage = ({ onQuizNavigation }) => {
                         variant="h5"
                         sx={{
                             fontWeight: 800,
-                            color: tokenFromUrl ? '#ffb610' : '#667eea',
+                            color: primaryColor,
                             mb: 1,
                         }}
                     >
@@ -660,7 +701,7 @@ const CartPage = ({ onQuizNavigation }) => {
                             {/* Regular Courses Section */}
                             {regularCourses.length > 0 && (
                                 <>
-                                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a202c', mb: 1 }}>
+                                    <Typography variant="h6" sx={{ fontWeight: 700, color: isLightBlueTheme ? '#1A1A1A' : '#1a202c', mb: 1 }}>
                                         Courses
                                     </Typography>
                                     {regularCourses.map((item, index) => (
@@ -670,9 +711,9 @@ const CartPage = ({ onQuizNavigation }) => {
                                                 borderRadius: '16px',
                                                 overflow: 'hidden',
                                                 transition: 'all 0.3s ease',
-                                                border: tokenFromUrl ? '1px solid rgba(255, 182, 16, 0.1)' : '1px solid rgba(102, 126, 234, 0.1)',
+                                                border: isLightBlueTheme ? '1px solid #E0E8F5' : tokenFromUrl ? '1px solid rgba(255, 182, 16, 0.1)' : '1px solid rgba(102, 126, 234, 0.1)',
                                                 '&:hover': {
-                                                    boxShadow: tokenFromUrl ? '0 8px 24px rgba(255, 182, 16, 0.15)' : '0 8px 24px rgba(102, 126, 234, 0.15)',
+                                                    boxShadow: isLightBlueTheme ? '0 8px 24px rgba(21, 143, 240, 0.15)' : tokenFromUrl ? '0 8px 24px rgba(255, 182, 16, 0.15)' : '0 8px 24px rgba(102, 126, 234, 0.15)',
                                                     transform: 'translateY(-4px)',
                                                 },
                                             }}
@@ -683,7 +724,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                                     <Box sx={{ p: { xs: 1.5, sm: 2 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                                                         <Box
                                                             sx={{
-                                                                background: tokenFromUrl ? 'linear-gradient(135deg, rgba(255, 182, 16, 0.1) 0%, rgba(255, 182, 16, 0.1) 100%)' : 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+                                                                background: isLightBlueTheme ? 'linear-gradient(135deg, rgba(21, 143, 240, 0.05) 0%, rgba(77, 168, 247, 0.05) 100%)' : tokenFromUrl ? 'linear-gradient(135deg, rgba(255, 182, 16, 0.1) 0%, rgba(255, 182, 16, 0.1) 100%)' : 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
                                                                 borderRadius: { xs: '8px', sm: '12px' },
                                                                 overflow: 'hidden',
                                                                 display: 'flex',
@@ -708,9 +749,9 @@ const CartPage = ({ onQuizNavigation }) => {
                                                         {item?.coursePricing && item?.coursePricing.length > 0 && (
                                                             <Box>
                                                                 <Typography variant="caption" sx={{ display: 'block', color: '#7a869a', fontWeight: 600, mb: 0.5, fontSize: '0.65rem', textTransform: 'uppercase' }}>
-                                                                    Available Options
+                                                                    Selected Option
                                                                 </Typography>
-                                                                {item?.coursePricing.map((pricing, pricingIndex) => (
+                                                                {item?.coursePricing.filter(pricing => pricing.id === item.coursePricingId).map((pricing, pricingIndex) => (
                                                                     <Stack direction="column" spacing={0.5} sx={{ mb: 0.5 }} key={pricingIndex}>
 
                                                                         {getLearningModeLabel(pricing) !== "N/A" && (
@@ -719,8 +760,8 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                                     px: 0.75,
                                                                                     py: 0.25,
                                                                                     borderRadius: '4px',
-                                                                                    background: tokenFromUrl ? 'rgba(255, 182, 16, 0.1)' : 'rgba(102, 126, 234, 0.1)',
-                                                                                    color: tokenFromUrl ? '#ffb610' : '#667eea',
+                                                                                    background: `${primaryColor}15`,
+                                                                                    color: primaryColor,
                                                                                     fontSize: '0.65rem',
                                                                                     fontWeight: 600,
                                                                                     whiteSpace: 'nowrap',
@@ -738,8 +779,8 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                                     px: 0.75,
                                                                                     py: 0.25,
                                                                                     borderRadius: '4px',
-                                                                                    background: tokenFromUrl ? 'rgba(255, 182, 16, 0.1)' : 'rgba(118, 75, 162, 0.1)',
-                                                                                    color: tokenFromUrl ? '#ffb610' : '#764ba2',
+                                                                                    background: `${secondaryColor}15`,
+                                                                                    color: secondaryColor,
                                                                                     fontSize: '0.65rem',
                                                                                     fontWeight: 600,
                                                                                     whiteSpace: 'nowrap',
@@ -800,7 +841,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                 <Box
                                                                     sx={{
                                                                         display: 'inline-block',
-                                                                        background: tokenFromUrl ? '#ffb610' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                                                        background: isLightBlueTheme ? '#158ff0' : tokenFromUrl ? '#ffb610' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                                                                         color: '#fff',
                                                                         px: { xs: 1, sm: 1.5 },
                                                                         py: { xs: 0.3, sm: 0.5 },
@@ -893,7 +934,7 @@ const CartPage = ({ onQuizNavigation }) => {
                             {/* Drip Courses Section */}
                             {dripCourses.length > 0 && (
                                 <>
-                                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1a202c', mb: 2, mt: 3 }}>
+                                    <Typography variant="h6" sx={{ fontWeight: 700, color: isLightBlueTheme ? '#1A1A1A' : '#1a202c', mb: 2, mt: 3 }}>
                                         Test Series & Plans
                                     </Typography>
                                     {dripCourses.map((item, index) => (
@@ -903,9 +944,9 @@ const CartPage = ({ onQuizNavigation }) => {
                                                 borderRadius: '16px',
                                                 overflow: 'hidden',
                                                 transition: 'all 0.3s ease',
-                                                border: '1px solid rgba(118, 75, 162, 0.1)',
+                                                border: isLightBlueTheme ? '1px solid #E0E8F5' : '1px solid rgba(118, 75, 162, 0.1)',
                                                 '&:hover': {
-                                                    boxShadow: '0 8px 24px rgba(118, 75, 162, 0.15)',
+                                                    boxShadow: isLightBlueTheme ? '0 8px 24px rgba(21, 143, 240, 0.15)' : '0 8px 24px rgba(118, 75, 162, 0.15)',
                                                     transform: 'translateY(-4px)',
                                                 },
                                             }}
@@ -917,7 +958,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                                             variant="h6"
                                                             sx={{
                                                                 fontWeight: 700,
-                                                                color: '#1a202c',
+                                                                color: isLightBlueTheme ? '#1A1A1A' : '#1a202c',
                                                                 fontSize: { xs: '1rem', sm: '1.2rem' },
                                                                 mb: 1,
                                                             }}
@@ -932,8 +973,8 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                     px: 1.5,
                                                                     py: 0.5,
                                                                     borderRadius: '6px',
-                                                                    background: 'rgba(102, 126, 234, 0.1)',
-                                                                    color: '#667eea',
+                                                                    background: `${primaryColor}15`,
+                                                                    color: primaryColor,
                                                                     fontSize: '0.75rem',
                                                                     fontWeight: 600,
                                                                 }}
@@ -946,8 +987,8 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                         px: 1.5,
                                                                         py: 0.5,
                                                                         borderRadius: '6px',
-                                                                        background: 'rgba(118, 75, 162, 0.1)',
-                                                                        color: '#764ba2',
+                                                                        background: `${secondaryColor}15`,
+                                                                        color: secondaryColor,
                                                                         fontSize: '0.75rem',
                                                                         fontWeight: 600,
                                                                     }}
@@ -965,7 +1006,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                         sx={{
                                                                             fontSize: { xs: '1.25rem', sm: '1.5rem' },
                                                                             fontWeight: 700,
-                                                                            background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                                                                            background: isLightBlueTheme ? 'linear-gradient(135deg, #158ff0 0%, #0D6BB8 100%)' : 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
                                                                             WebkitBackgroundClip: 'text',
                                                                             WebkitTextFillColor: 'transparent',
                                                                         }}
@@ -1000,7 +1041,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                                                     sx={{
                                                                         fontSize: { xs: '1.25rem', sm: '1.5rem' },
                                                                         fontWeight: 700,
-                                                                        background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                                                                        background: isLightBlueTheme ? 'linear-gradient(135deg, #158ff0 0%, #0D6BB8 100%)' : 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
                                                                         WebkitBackgroundClip: 'text',
                                                                         WebkitTextFillColor: 'transparent',
                                                                     }}
@@ -1038,14 +1079,14 @@ const CartPage = ({ onQuizNavigation }) => {
                                             width: 120,
                                             height: 120,
                                             borderRadius: '50%',
-                                            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+                                            background: isLightBlueTheme ? 'linear-gradient(135deg, rgba(21, 143, 240, 0.1) 0%, rgba(77, 168, 247, 0.1) 100%)' : 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             margin: '0 auto 24px',
                                         }}
                                     >
-                                        <ShoppingCart size={48} color="#667eea" />
+                                        <ShoppingCart size={48} color={primaryColor} />
                                     </Box>
                                     <Typography variant="h5" fontWeight={700} mb={1}>
                                         Your cart is empty
@@ -1069,7 +1110,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                             }
                                         }}
                                         sx={{
-                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            background: isLightBlueTheme ? 'linear-gradient(135deg, #158ff0 0%, #0D6BB8 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                                             textTransform: 'none',
                                             px: 4,
                                             py: 1.5,
@@ -1093,10 +1134,10 @@ const CartPage = ({ onQuizNavigation }) => {
                                     position: { lg: 'sticky' },
                                     top: { lg: 24 },
                                     background: '#fff',
-                                    border: tokenFromUrl ? '1px solid rgba(255, 182, 16, 0.2)' : '1px solid rgba(102, 126, 234, 0.2)',
+                                    border: isLightBlueTheme ? '1px solid #E0E8F5' : tokenFromUrl ? '1px solid rgba(255, 182, 16, 0.2)' : '1px solid rgba(102, 126, 234, 0.2)',
                                 }}
                             >
-                                <Typography variant="h6" fontWeight={700} mb={3} sx={{ color: tokenFromUrl ? '#ffb610' : '#1a202c' }}>
+                                <Typography variant="h6" fontWeight={700} mb={3} sx={{ color: isLightBlueTheme ? '#158ff0' : tokenFromUrl ? '#ffb610' : '#1a202c' }}>
                                     Order Summary
                                 </Typography>
 
@@ -1124,14 +1165,16 @@ const CartPage = ({ onQuizNavigation }) => {
                                                     onClick={handleReedemCode}
                                                     startIcon={<Tag size={16} />}
                                                     sx={{
-                                                        color: isLogoTheme ? '#FFC107' : '#667eea',
+                                                        color: isLightBlueTheme ? '#158ff0' : isLogoTheme ? '#FFC107' : '#667eea',
                                                         fontWeight: 600,
                                                         fontSize: '0.875rem',
                                                         textTransform: 'none',
                                                         '&:hover': {
-                                                            background: isLogoTheme
-                                                                ? 'rgba(255, 193, 7, 0.1)'
-                                                                : 'rgba(102, 126, 234, 0.1)',
+                                                            background: isLightBlueTheme
+                                                                ? 'rgba(21, 143, 240, 0.1)'
+                                                                : isLogoTheme
+                                                                    ? 'rgba(255, 193, 7, 0.1)'
+                                                                    : 'rgba(102, 126, 234, 0.1)',
                                                         }
                                                     }}
                                                 >
@@ -1145,16 +1188,18 @@ const CartPage = ({ onQuizNavigation }) => {
                                                         p: 2,
                                                         background: isLogoTheme ? '#2A2A2A' : '#fff',
                                                         borderRadius: '12px',
-                                                        border: isLogoTheme
-                                                            ? '1px solid rgba(255, 193, 7, 0.3)'
-                                                            : '1px solid rgba(102, 126, 234, 0.2)',
+                                                        border: isLightBlueTheme
+                                                            ? '1px solid #E0E8F5'
+                                                            : isLogoTheme
+                                                                ? '1px solid rgba(255, 193, 7, 0.3)'
+                                                                : '1px solid rgba(102, 126, 234, 0.2)',
                                                     }}
                                                 >
                                                     <InputLabel
                                                         sx={{
                                                             fontWeight: 600,
                                                             fontSize: '14px',
-                                                            color: isLogoTheme ? '#FFC107' : '#1a202c',
+                                                            color: isLightBlueTheme ? '#158ff0' : isLogoTheme ? '#FFC107' : '#1a202c',
                                                             mb: 1,
                                                         }}
                                                     >
@@ -1415,18 +1460,11 @@ const CartPage = ({ onQuizNavigation }) => {
                                 ref={(iframe) => {
                                     if (iframe) {
                                         iframe.onload = () => {
-                                            console.log('Payment iframe loaded successfully');
-                                            console.log('Current iframe URL:', paymentUrl);
 
                                             // Try to extract URL from iframe content
                                             try {
                                                 const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
                                                 if (iframeDoc) {
-                                                    console.log('Iframe document accessible');
-
-                                                    // Log iframe location
-                                                    console.log('Iframe location href:', iframe.contentWindow?.location?.href);
-
                                                     // Store current payment URL
                                                     sessionStorage.setItem('iframeLoadedUrl', paymentUrl);
                                                     console.log('Stored iframe loaded URL in sessionStorage');

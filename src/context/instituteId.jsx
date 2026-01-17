@@ -17,6 +17,9 @@
 // const instId = 331;
 
 // lecturWala
-const instId = 262;
+// const instId = 262;
+
+// avj
+const instId = 340;
 
 export default instId;

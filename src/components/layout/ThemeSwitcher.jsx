@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { IconButton, Menu, MenuItem, Box, Tooltip } from '@mui/material';
 import { THEMES, THEME_NAMES, useTheme } from '../../context/ThemeContext';
+import instId from '../../context/instituteId';
 
 const ThemeSwitcher = () => {
   const { currentTheme, switchTheme } = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
+  // Hide theme switcher for instId 340
+  if (instId === 340) {
+    return null;
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

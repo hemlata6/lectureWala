@@ -29,6 +29,18 @@ export const COLORS = {
   LOGO_TEXT_PRIMARY: '#000000',
   LOGO_TEXT_SECONDARY: 'rgba(0, 0, 0, 0.70)',
 
+  // Light Blue Theme Colors (Professional & Modern)
+  LIGHTBLUE_PRIMARY: '#158ff0',
+  LIGHTBLUE_PRIMARY_LIGHT: '#4DA8F7',
+  LIGHTBLUE_PRIMARY_DARK: '#0D6BB8',
+  LIGHTBLUE_SECONDARY: '#FF6B6B',
+  LIGHTBLUE_SECONDARY_LIGHT: '#FF8E8E',
+  LIGHTBLUE_SECONDARY_DARK: '#E63946',
+  LIGHTBLUE_BG: '#F8FCFF',
+  LIGHTBLUE_PAPER: '#FFFFFF',
+  LIGHTBLUE_TEXT_PRIMARY: '#1A1A1A',
+  LIGHTBLUE_TEXT_SECONDARY: 'rgba(26, 26, 26, 0.70)',
+
   // Common Colors (used in both themes)
   SUCCESS: '#4caf50',
   WARNING: '#ff9800',
@@ -85,6 +97,33 @@ export const THEME_CONFIG = {
       text: {
         primary: COLORS.LOGO_TEXT_PRIMARY,
         secondary: COLORS.LOGO_TEXT_SECONDARY,
+      },
+      success: { main: COLORS.SUCCESS },
+      warning: { main: COLORS.WARNING },
+      error: { main: COLORS.ERROR },
+      info: { main: COLORS.INFO },
+    },
+  },
+  LIGHTBLUE: {
+    name: 'Light Blue Professional',
+    palette: {
+      primary: {
+        main: COLORS.LIGHTBLUE_PRIMARY,
+        light: COLORS.LIGHTBLUE_PRIMARY_LIGHT,
+        dark: COLORS.LIGHTBLUE_PRIMARY_DARK,
+      },
+      secondary: {
+        main: COLORS.LIGHTBLUE_SECONDARY,
+        light: COLORS.LIGHTBLUE_SECONDARY_LIGHT,
+        dark: COLORS.LIGHTBLUE_SECONDARY_DARK,
+      },
+      background: {
+        default: COLORS.LIGHTBLUE_BG,
+        paper: COLORS.LIGHTBLUE_PAPER,
+      },
+      text: {
+        primary: COLORS.LIGHTBLUE_TEXT_PRIMARY,
+        secondary: COLORS.LIGHTBLUE_TEXT_SECONDARY,
       },
       success: { main: COLORS.SUCCESS },
       warning: { main: COLORS.WARNING },

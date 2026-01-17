@@ -30,6 +30,23 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
     const [isCouponValid, setIsCouponValid] = useState(null);
     const [urlParams, setUrlParams] = useState({ studentName: null, contact: null, email: null });
     const isLogoTheme = currentTheme === 'logo';
+    const isLightBlueTheme = currentTheme === 'lightblue';
+
+    // Helper functions to get theme colors
+    const getPrimaryColor = () => {
+        if (isLightBlueTheme) return '#158ff0';
+        if (isLogoTheme) return '#FFC107';
+        return '#667eea';
+    };
+
+    const getSecondaryColor = () => {
+        if (isLightBlueTheme) return '#4DA8F7';
+        if (isLogoTheme) return '#FFD54F';
+        return '#764ba2';
+    };
+
+    const primaryColor = getPrimaryColor();
+    const secondaryColor = getSecondaryColor();
 
     useEffect(() => {
         // Extract URL parameters
@@ -190,7 +207,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
             "entityModals": payloadCart
         }
 
-         console.log('body', body);
+        console.log('body', body);
         try {
             const response = await axios.post(BASE_URL + `/admin/payment/fetch-public-checkout-url`, body);
 
@@ -212,7 +229,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                 setEmail('')
                 setPayloadCart([])
                 setProceedToCheckoutModal(false)
-                
+
                 // Redirect back to store with URL parameters if they exist
                 const routeData = new URLSearchParams(window.location.search).get('isMobile');
                 if (urlParams.studentName || urlParams.contact || urlParams.email) {
@@ -236,23 +253,27 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
     return (
         <Box
             sx={{
-                background: isLogoTheme
-                    ? 'linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)'
-                    : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                background: isLightBlueTheme
+                    ? 'linear-gradient(135deg, #F8FBFE 0%, #E3F2FD 100%)'
+                    : isLogoTheme
+                        ? 'linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%)'
+                        : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
                 borderRadius: '16px',
                 overflow: 'hidden',
                 maxHeight: '90vh',
                 display: 'flex',
                 flexDirection: 'column',
-                border: isLogoTheme ? '2px solid #FFC107' : 'none',
+                border: isLightBlueTheme ? '2px solid #158ff0' : (isLogoTheme ? '2px solid #FFC107' : 'none'),
             }}
         >
             {/* Modern Header */}
             <Box
                 sx={{
-                    background: isLogoTheme
-                        ? 'linear-gradient(135deg, #FFC107 0%, #FFB300 100%)'
-                        : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: isLightBlueTheme
+                        ? 'linear-gradient(135deg, #158ff0 0%, #0D6BB8 100%)'
+                        : isLogoTheme
+                            ? 'linear-gradient(135deg, #FFC107 0%, #FFB300 100%)'
+                            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     p: { xs: 2.5, sm: 3 },
                     textAlign: 'center',
                     flexShrink: 0,
@@ -276,7 +297,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                 <Typography
                     variant="h5"
                     sx={{
-                        color: isLogoTheme ? '#000000' : '#fff',
+                        color: (isLogoTheme || isLightBlueTheme) ? '#fff' : '#fff',
                         fontWeight: 700,
                         fontSize: { xs: '1.25rem', sm: '1.5rem' },
                     }}
@@ -286,7 +307,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                 <Typography
                     variant="body2"
                     sx={{
-                        color: isLogoTheme ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+                        color: (isLogoTheme || isLightBlueTheme) ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.9)',
                         mt: 1,
                     }}
                 >
@@ -304,19 +325,23 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                         width: '8px',
                     },
                     '&::-webkit-scrollbar-track': {
-                        background: isLogoTheme ? 'rgba(255, 193, 7, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                        background: isLightBlueTheme ? 'rgba(21, 143, 240, 0.1)' : (isLogoTheme ? 'rgba(255, 193, 7, 0.1)' : 'rgba(0, 0, 0, 0.05)'),
                         borderRadius: '10px',
                     },
                     '&::-webkit-scrollbar-thumb': {
-                        background: isLogoTheme
-                            ? 'linear-gradient(135deg, #FFC107 0%, #FFB300 100%)'
-                            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background: isLightBlueTheme
+                            ? 'linear-gradient(135deg, #158ff0 0%, #0D6BB8 100%)'
+                            : isLogoTheme
+                                ? 'linear-gradient(135deg, #FFC107 0%, #FFB300 100%)'
+                                : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         borderRadius: '10px',
                     },
                     '&::-webkit-scrollbar-thumb:hover': {
-                        background: isLogoTheme
-                            ? 'linear-gradient(135deg, #FFD54F 0%, #FFC107 100%)'
-                            : 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                        background: isLightBlueTheme
+                            ? 'linear-gradient(135deg, #4DA8F7 0%, #158ff0 100%)'
+                            : isLogoTheme
+                                ? 'linear-gradient(135deg, #FFD54F 0%, #FFC107 100%)'
+                                : 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
                     },
                 }}
             >
@@ -334,7 +359,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <User size={20} color={isLogoTheme ? "#FFC107" : "#667eea"} />
+                                        <User size={20} color={primaryColor} />
                                     </InputAdornment>
                                 ),
                                 style: {
@@ -348,9 +373,9 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                 sx: {
                                     fontSize: '14px',
                                     fontWeight: 600,
-                                    color: isLogoTheme ? '#FFC107' : '#667eea',
+                                    color: primaryColor,
                                     '&.Mui-focused': {
-                                        color: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        color: primaryColor,
                                     }
                                 }
                             }}
@@ -359,17 +384,17 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                     backgroundColor: isLogoTheme ? '#2A2A2A' : '#fff',
                                     transition: 'all 0.3s ease',
                                     '& fieldset': {
-                                        borderColor: isLogoTheme ? '#FFC107' : '#e0e0e0',
+                                        borderColor: isLightBlueTheme ? '#E0E8F5' : (isLogoTheme ? '#FFC107' : '#e0e0e0'),
                                         borderWidth: '2px',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        borderColor: primaryColor,
                                     },
                                     '&.Mui-focused': {
                                         backgroundColor: isLogoTheme ? '#2A2A2A' : '#fff',
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        borderColor: primaryColor,
                                     },
                                     '& input': {
                                         color: isLogoTheme ? '#E5E5E5' : '#000',
@@ -397,7 +422,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <Phone size={20} color={isLogoTheme ? "#FFC107" : "#667eea"} />
+                                        <Phone size={20} color={primaryColor} />
                                     </InputAdornment>
                                 ),
                                 style: {
@@ -411,9 +436,9 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                 sx: {
                                     fontSize: '14px',
                                     fontWeight: 600,
-                                    color: isLogoTheme ? '#FFC107' : '#667eea',
+                                    color: primaryColor,
                                     '&.Mui-focused': {
-                                        color: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        color: primaryColor,
                                     }
                                 }
                             }}
@@ -422,17 +447,17 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                     backgroundColor: isLogoTheme ? '#2A2A2A' : '#fff',
                                     transition: 'all 0.3s ease',
                                     '& fieldset': {
-                                        borderColor: isLogoTheme ? '#FFC107' : '#e0e0e0',
+                                        borderColor: isLightBlueTheme ? '#E0E8F5' : (isLogoTheme ? '#FFC107' : '#e0e0e0'),
                                         borderWidth: '2px',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        borderColor: primaryColor,
                                     },
                                     '&.Mui-focused': {
                                         backgroundColor: isLogoTheme ? '#2A2A2A' : '#fff',
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        borderColor: primaryColor,
                                     },
                                     '& input': {
                                         color: isLogoTheme ? '#E5E5E5' : '#000',
@@ -464,7 +489,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
-                                        <Mail size={20} color={isLogoTheme ? "#FFC107" : "#667eea"} />
+                                        <Mail size={20} color={primaryColor} />
                                     </InputAdornment>
                                 ),
                                 style: {
@@ -478,9 +503,9 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                 sx: {
                                     fontSize: '14px',
                                     fontWeight: 600,
-                                    color: isLogoTheme ? '#FFC107' : '#667eea',
+                                    color: primaryColor,
                                     '&.Mui-focused': {
-                                        color: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        color: primaryColor,
                                     }
                                 }
                             }}
@@ -489,17 +514,17 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                     backgroundColor: isLogoTheme ? '#2A2A2A' : '#fff',
                                     transition: 'all 0.3s ease',
                                     '& fieldset': {
-                                        borderColor: isLogoTheme ? '#FFC107' : '#e0e0e0',
+                                        borderColor: isLightBlueTheme ? '#E0E8F5' : (isLogoTheme ? '#FFC107' : '#e0e0e0'),
                                         borderWidth: '2px',
                                     },
                                     '&:hover fieldset': {
-                                        borderColor: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        borderColor: primaryColor,
                                     },
                                     '&.Mui-focused': {
                                         backgroundColor: isLogoTheme ? '#2A2A2A' : '#fff',
                                     },
                                     '&.Mui-focused fieldset': {
-                                        borderColor: isLogoTheme ? '#FFD54F' : '#667eea',
+                                        borderColor: primaryColor,
                                     },
                                     '& input': {
                                         color: isLogoTheme ? '#E5E5E5' : '#000',
@@ -522,14 +547,12 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                 onClick={handleReedemCode}
                                 startIcon={<Tag size={16} />}
                                 sx={{
-                                    color: isLogoTheme ? '#FFC107' : '#667eea',
+                                    color: primaryColor,
                                     fontWeight: 600,
                                     fontSize: '0.875rem',
                                     textTransform: 'none',
                                     '&:hover': {
-                                        background: isLogoTheme
-                                            ? 'rgba(255, 193, 7, 0.1)'
-                                            : 'rgba(102, 126, 234, 0.1)',
+                                        background: `${primaryColor}15`,
                                     }
                                 }}
                             >
@@ -543,16 +566,18 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                     p: 2,
                                     background: isLogoTheme ? '#2A2A2A' : '#fff',
                                     borderRadius: '12px',
-                                    border: isLogoTheme
-                                        ? '1px solid rgba(255, 193, 7, 0.3)'
-                                        : '1px solid rgba(102, 126, 234, 0.2)',
+                                    border: isLightBlueTheme
+                                        ? '1px solid #E0E8F5'
+                                        : isLogoTheme
+                                            ? '1px solid rgba(255, 193, 7, 0.3)'
+                                            : '1px solid rgba(102, 126, 234, 0.2)',
                                 }}
                             >
                                 <InputLabel
                                     sx={{
                                         fontWeight: 600,
                                         fontSize: '14px',
-                                        color: isLogoTheme ? '#FFC107' : '#1a202c',
+                                        color: primaryColor,
                                         mb: 1,
                                     }}
                                 >
@@ -579,16 +604,14 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                                     background: isCouponValid === true
                                                         ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                                                         : 'transparent',
-                                                    color: isCouponValid === true ? '#fff' : (isLogoTheme ? '#FFC107' : getColor()),
+                                                    color: isCouponValid === true ? '#fff' : primaryColor,
                                                     '&:hover': {
                                                         background: isCouponValid === true
                                                             ? 'linear-gradient(135deg, #059669 0%, #10b981 100%)'
-                                                            : isLogoTheme
-                                                                ? 'rgba(255, 193, 7, 0.1)'
-                                                                : 'rgba(102, 126, 234, 0.1)',
+                                                            : `${primaryColor}15`,
                                                     },
                                                     '&.Mui-disabled': {
-                                                        color: isLogoTheme ? 'rgba(255, 193, 7, 0.3)' : 'rgba(0, 0, 0, 0.26)',
+                                                        color: `${primaryColor}40`,
                                                     }
                                                 }}
                                                 startIcon={isCouponValid === true ? <Check size={16} /> : null}
@@ -606,27 +629,21 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                                 ? '#10b981'
                                                 : isCouponValid === false
                                                     ? '#ef4444'
-                                                    : isLogoTheme
-                                                        ? '#FFC107'
-                                                        : 'rgba(0, 0, 0, 0.23)',
+                                                    : primaryColor,
                                         },
                                         '&:hover .MuiOutlinedInput-notchedOutline': {
                                             borderColor: isCouponValid === true
                                                 ? '#10b981'
                                                 : isCouponValid === false
                                                     ? '#ef4444'
-                                                    : isLogoTheme
-                                                        ? '#FFD54F'
-                                                        : '#667eea',
+                                                    : primaryColor,
                                         },
                                         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                                             borderColor: isCouponValid === true
                                                 ? '#10b981'
                                                 : isCouponValid === false
                                                     ? '#ef4444'
-                                                    : isLogoTheme
-                                                        ? '#FFD54F'
-                                                        : '#667eea',
+                                                    : primaryColor,
                                         },
                                         '& input::placeholder': {
                                             color: isLogoTheme ? 'rgba(229, 229, 229, 0.5)' : undefined,
@@ -656,25 +673,31 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                         mt: 3,
                         p: 2.5,
                         borderRadius: '12px',
-                        background: isLogoTheme
-                            ? 'linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 179, 0, 0.1) 100%)'
-                            : 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-                        border: isLogoTheme
-                            ? '1px solid rgba(255, 193, 7, 0.3)'
-                            : '1px solid rgba(102, 126, 234, 0.2)',
+                        background: isLightBlueTheme
+                            ? 'linear-gradient(135deg, rgba(21, 143, 240, 0.08) 0%, rgba(77, 168, 247, 0.08) 100%)'
+                            : isLogoTheme
+                                ? 'linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 179, 0, 0.1) 100%)'
+                                : 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+                        border: isLightBlueTheme
+                            ? '1px solid #E0E8F5'
+                            : isLogoTheme
+                                ? '1px solid rgba(255, 193, 7, 0.3)'
+                                : '1px solid rgba(102, 126, 234, 0.2)',
                     }}
                 >
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="p" fontWeight={700} color={isLogoTheme ? '#FFC107' : '#1a202c'}>
+                        <Typography variant="p" fontWeight={700} color={isLightBlueTheme ? '#158ff0' : (isLogoTheme ? '#FFC107' : '#1a202c')}>
                             Total Amount
                         </Typography>
                         <Typography
                             variant="h6"
                             fontWeight={700}
                             sx={{
-                                background: isLogoTheme
-                                    ? 'linear-gradient(135deg, #FFC107 0%, #FFD54F 100%)'
-                                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                background: isLightBlueTheme
+                                    ? 'linear-gradient(135deg, #158ff0 0%, #0D6BB8 100%)'
+                                    : isLogoTheme
+                                        ? 'linear-gradient(135deg, #FFC107 0%, #FFD54F 100%)'
+                                        : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                             }}
@@ -692,31 +715,39 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                     disabled={title === '' || number === '' || email === ''}
                     sx={{
                         mt: 3,
-                        background: isLogoTheme
-                            ? 'linear-gradient(135deg, #FFC107 0%, #FFB300 100%)'
-                            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background: isLightBlueTheme
+                            ? 'linear-gradient(135deg, #158ff0 0%, #0D6BB8 100%)'
+                            : isLogoTheme
+                                ? 'linear-gradient(135deg, #FFC107 0%, #FFB300 100%)'
+                                : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         color: isLogoTheme ? '#000000' : '#fff',
                         fontWeight: 700,
                         fontSize: '1rem',
                         py: 1.5,
                         borderRadius: '12px',
                         textTransform: 'none',
-                        boxShadow: isLogoTheme
-                            ? '0 4px 15px 0 rgba(255, 193, 7, 0.4)'
-                            : '0 4px 15px 0 rgba(102, 126, 234, 0.4)',
+                        boxShadow: isLightBlueTheme
+                            ? '0 4px 15px 0 rgba(21, 143, 240, 0.4)'
+                            : isLogoTheme
+                                ? '0 4px 15px 0 rgba(255, 193, 7, 0.4)'
+                                : '0 4px 15px 0 rgba(102, 126, 234, 0.4)',
                         transition: 'all 0.3s ease',
                         '&:hover': {
-                            background: isLogoTheme
-                                ? 'linear-gradient(135deg, #FFD54F 0%, #FFC107 100%)'
-                                : 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                            boxShadow: isLogoTheme
-                                ? '0 6px 20px 0 rgba(255, 193, 7, 0.6)'
-                                : '0 6px 20px 0 rgba(102, 126, 234, 0.6)',
+                            background: isLightBlueTheme
+                                ? 'linear-gradient(135deg, #4DA8F7 0%, #158ff0 100%)'
+                                : isLogoTheme
+                                    ? 'linear-gradient(135deg, #FFD54F 0%, #FFC107 100%)'
+                                    : 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                            boxShadow: isLightBlueTheme
+                                ? '0 6px 20px 0 rgba(21, 143, 240, 0.6)'
+                                : isLogoTheme
+                                    ? '0 6px 20px 0 rgba(255, 193, 7, 0.6)'
+                                    : '0 6px 20px 0 rgba(102, 126, 234, 0.6)',
                             transform: 'translateY(-2px)',
                         },
                         '&.Mui-disabled': {
-                            background: isLogoTheme ? 'rgba(255, 193, 7, 0.3)' : 'rgba(0, 0, 0, 0.12)',
-                            color: isLogoTheme ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.26)',
+                            background: `${primaryColor}30`,
+                            color: 'rgba(0, 0, 0, 0.26)',
                             boxShadow: 'none',
                         },
                     }}
