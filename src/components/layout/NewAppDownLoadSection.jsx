@@ -347,7 +347,7 @@ const AppShowcaseSection = () => {
                                                     color: 'white',
                                                 }}
                                             >
-                                                {instId === 331 ? "Percept Academy App" : instId === 262 ? "LecturWala App" : "Other App"}
+                                                {instId === 331 ? "Percept Institute App" : instId === 262 ? "LecturWala App" : "Other App"}
                                             </Typography>
 
                                             <Typography
