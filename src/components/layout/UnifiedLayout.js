@@ -320,7 +320,7 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
     const policyMenuItems = [
         { id: 'privacy', label: 'Privacy Policy', icon: Shield },
         { id: 'terms', label: 'Terms & Conditions', icon: FileText },
-        { id: 'refund', label: 'Refund Policy', icon: CreditCard },
+        // { id: 'refund', label: 'Refund Policy', icon: CreditCard },
     ];
 
     // Private menu items (only visible when authenticated)
@@ -902,7 +902,7 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
                                         {isAuthenticated ? (
                                             <span>
                                                 <span className="hidden sm:inline">Welcome to </span>
-                                                <span className="text-blue-600">{institute?.institute || (instId === 331 ? "PS Academy App" : instId === 262 ? "LecturWala App" : "")}</span>
+                                                <span className="text-blue-600">{institute?.institute || (instId === 331 ? "Percept Academy App" : instId === 262 ? "LecturWala App" : "")}</span>
                                             </span>
                                         ) : (
                                             <span className="capitalize">
