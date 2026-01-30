@@ -477,6 +477,8 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
         [...publicMenuItems, ...privateMenuItems, ...policyMenuItems] :
         [...publicMenuItems, ...policyMenuItems, ...authMenuItems];
 
+        console.log('instituteAppSettingsModals', instituteAppSettingsModals);
+        
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
@@ -495,7 +497,7 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
                     <div className="flex-shrink-0 p-4 border-b border-gray-200">
                         <div className="flex items-center justify-between">
                             {!isSidebarCollapsed && (
-                                <div className="flex items-center">
+                                <div className="flex items-center w-full text-center justify-center">
                                     {instituteAppSettingsModals?.logo ? (
                                         <img
                                             style={{ borderRadius: "8px", width: "80px", height: "80px" }}
@@ -509,8 +511,8 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
                                                 PS Academy
                                             </>} */}
                                             <img
-                                                style={{ borderRadius: "8px" }}
-                                                src='/ps_logo.png'
+                                                style={{ borderRadius: "8px", maxWidth: "150px", maxHeight: "150px" }}
+                                                src='/anm_logo.png'
                                                 alt={institute?.institue || 'Logo'}
                                                 className=""
                                             />
