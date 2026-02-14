@@ -13,7 +13,7 @@ const Endpoints = {
 	// baseURL: "https://devapi.classiolabs.com",
 	// baseURL: "http://192.168.1.16:6060/",
 	// mediaBaseUrl: "https://media.theoogway.com/",
-	mediaBaseUrl: "https://classiopsacad.in-maa-1.linodeobjects.com/",
+	mediaBaseUrl: "https://classiolecturwalamedia.classiolabs.com/",
 	// base: "devapi.classiolabs.com",
 	base: "prodapi.classiolabs.com",
 	// mediaBaseUrl: "https://media.theoogway.com/",

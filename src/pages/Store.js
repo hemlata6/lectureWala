@@ -121,6 +121,21 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
     };
   }, [routeData, tokenFromUrl]);
 
+  // Clear all filters when routeData is present
+  useEffect(() => {
+    if (routeData) {
+      // Clear all filters to show all courses
+      setSelectedDomain(null);
+      setSelectedExamStage(null);
+      setSelectedFaculties([]);
+      setSelectedPapers([]);
+      setSelectedTag(null);
+      setSelectedProductType(null);
+      setPriceSorting('');
+      setSearchTerm('');
+    }
+  }, [routeData, domains, faculties]);
+
   useEffect(() => {
 
     window.scrollTo(0, 0);
@@ -245,6 +260,11 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
   useEffect(() => {
     const pendingStage = sessionStorage.getItem('pendingExamStageSelection');
 
+    // Skip if routeData is present
+    if (routeData) {
+      return;
+    }
+
     if (pendingStage && isProcessingSubmenu && domains.length > 0) {
       try {
         const examStage = JSON.parse(pendingStage);
@@ -261,12 +281,17 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
         sessionStorage.removeItem('pendingExamStageSelection');
       }
     }
-  }, [domains, isProcessingSubmenu]);
+  }, [domains, isProcessingSubmenu, routeData]);
 
   // Set default selections when data is loaded
   useEffect(() => {
     const facultyFilter = location.state?.facultyFilter;
     const fromCoursesTag = location.state?.fromCoursesTag;
+
+    // Skip default selection if routeData is present
+    if (routeData) {
+      return;
+    }
 
     // Skip default selection if we're processing a submenu selection
     if (isProcessingSubmenu) {
@@ -285,12 +310,17 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
         }
       }
     }
-  }, [domains, location.state, isProcessingSubmenu]);
+  }, [domains, location.state, isProcessingSubmenu, routeData]);
 
   // Auto-select exam stage based on selected domain (when coming from VideoLecturePage)
   useEffect(() => {
     const facultyFilter = location.state?.facultyFilter;
     const fromCoursesTag = location.state?.fromCoursesTag;
+
+    // Skip auto-selection if routeData is present
+    if (routeData) {
+      return;
+    }
 
     // Skip auto-selection if coming from CoursesByTag or Faculty
     if ((facultyFilter || fromCoursesTag) && selectedExamStage) {
@@ -318,11 +348,16 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
         }
       }
     }
-  }, [selectedDomain, domains, location.state, isProcessingSubmenu, selectedExamStage]);
+  }, [selectedDomain, domains, location.state, isProcessingSubmenu, selectedExamStage, routeData]);
 
   // Select all faculties by default or specific faculty if coming from faculty click
   useEffect(() => {
     const facultyFilter = location.state?.facultyFilter;
+
+    // Skip if routeData is present
+    if (routeData) {
+      return;
+    }
 
     if (facultyFilter && faculties.length > 0) {
       // Coming from faculty click - select only the specific faculty
@@ -334,7 +369,7 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
       // Default behavior - select all faculties
       setSelectedFaculties(faculties);
     }
-  }, [faculties, filtersInitialized, location.state]);
+  }, [faculties, filtersInitialized, location.state, routeData]);
 
   // Select 'lecture' product type by default
   // useEffect(() => {
@@ -575,22 +610,10 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
   };
 
   const clearAllFilters = () => {
-    // Reset to first domain and exam stage
-    const firstDomain = domains.find(d => d.parentId === 0);
-    if (firstDomain) {
-      setSelectedDomain(firstDomain);
-      // if (firstDomain.child && firstDomain.child.length > 0) {
-      //   setSelectedExamStage(firstDomain.child[0]);
-      // }
-      setSelectedExamStage(null);
-      setSelectedFaculties([])
-    } else {
-      setSelectedDomain(null);
-      setSelectedExamStage(null);
-    }
-
-    // Reset to all faculties
-    // setSelectedFaculties(faculties);
+    // Clear ALL filters to show all courses
+    setSelectedDomain(null);
+    setSelectedExamStage(null);
+    setSelectedFaculties([]);
     setSelectedPapers([]);
     setSelectedTag(null);
     setSelectedProductType(null);
