@@ -40,6 +40,8 @@ const CartPage = ({ onQuizNavigation }) => {
     const [couponNumber, setCouponNumber] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isCouponValid, setIsCouponValid] = useState(null);
+    const [couponDiscountValue, setCouponDiscountValue] = useState(0);
+    const [couponDiscountType, setCouponDiscountType] = useState('');
     const isLogoTheme = currentTheme === 'logo';
 
     // console.log('paymentUrl===cartttt', paymentUrl, checkoutResponse);
@@ -134,6 +136,20 @@ const CartPage = ({ onQuizNavigation }) => {
         setIsCouponValid(null);
     }
 
+    // Final Price After Coupon Applied
+    const calculateFinalPriceWithCoupon = () => {
+        if (isCouponValid !== true || couponDiscountValue === 0) {
+            return finalAmount;
+        }
+
+        if (couponDiscountType === 'amount') {
+            // Direct amount discount
+            return Math.max(0, finalAmount - couponDiscountValue);
+        }
+
+        return finalAmount;
+    };
+
     const handleCheckCoupon = async (e) => {
         e.preventDefault();
         const body = {
@@ -147,6 +163,9 @@ const CartPage = ({ onQuizNavigation }) => {
             const response = await axios.post(BASE_URL + `/student/coupon/verify`, body);
             if (response.data.errorCode === 0) {
                 setIsCouponValid(response.data?.valid);
+                setCouponDiscountValue(response.data?.discount || 0);
+                setCouponDiscountType(response.data?.type || '');
+                console.log('Coupon Check Response:', response.data);
                 setErrorMessage("");
             } else {
                 setIsCouponValid(response.data?.valid === null ? false : response.data?.valid);
@@ -364,13 +383,13 @@ const CartPage = ({ onQuizNavigation }) => {
                 email: email,
                 instId: instId,
                 campaignId: null,
-                coupon: "",
+                coupon: isCouponValid === true ? couponNumber : "",
                 coursePricingId: 0,
                 entityModals: payloadCart
             };
             const mobileBody = {
                 "getCheckoutUrls": payloadCart,
-                "coupon": ""
+                "coupon": isCouponValid === true ? couponNumber : ""
             }
 
             const response = await axios.post(BASE_URL + `${routeData ? "payment/get-checkout-url" : "/admin/payment/fetch-public-checkout-url"}`, routeData ? mobileBody : body, routeData ? { headers: { "X-Auth": tokenFromUrl } } : "");
@@ -1258,6 +1277,36 @@ const CartPage = ({ onQuizNavigation }) => {
 
                                 <Divider sx={{ my: 2 }} />
 
+                                {isCouponValid === true && (
+                                    <>
+                                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
+                                            <Typography variant="p" fontWeight={700} sx={{ color: tokenFromUrl ? '#ffb610' : '#1a202c' }}>Subtotal</Typography>
+                                            <Typography
+                                                variant="body2"
+                                                fontWeight={700}
+                                                sx={{
+                                                    color: tokenFromUrl ? '#ffb610' : 'text.primary',
+                                                }}
+                                            >
+                                                ₹{finalAmount.toFixed(2)}
+                                            </Typography>
+                                        </Stack>
+
+                                        <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
+                                            <Typography variant="p" fontWeight={700} sx={{ color: '#ef4444' }}>Discount ({couponDiscountType === 'percentage' ? `${couponDiscountValue}%` : 'Fixed'})</Typography>
+                                            <Typography
+                                                variant="body2"
+                                                fontWeight={700}
+                                                sx={{
+                                                    color: '#10b981',
+                                                }}
+                                            >
+                                                -₹{couponDiscountType === 'amount' ? couponDiscountValue.toFixed(2) : ((finalAmount * couponDiscountValue) / 100).toFixed(2)}
+                                            </Typography>
+                                        </Stack>
+                                    </>
+                                )}
+
                                 <Stack direction="row" justifyContent="space-between" sx={{ mb: 3 }}>
                                     <Typography variant="p" fontWeight={700} sx={{ color: tokenFromUrl ? '#ffb610' : '#1a202c' }}>Total Amount</Typography>
                                     <Typography
@@ -1267,7 +1316,7 @@ const CartPage = ({ onQuizNavigation }) => {
                                             color: tokenFromUrl ? '#ffb610' : 'text.primary',
                                         }}
                                     >
-                                        ₹{finalAmount.toFixed(2)}
+                                        ₹{calculateFinalPriceWithCoupon().toFixed(2)}
                                     </Typography>
                                 </Stack>
 
