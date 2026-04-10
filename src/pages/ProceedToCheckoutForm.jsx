@@ -30,6 +30,8 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
     const [isCouponValid, setIsCouponValid] = useState(null);
     const [urlParams, setUrlParams] = useState({ studentName: null, contact: null, email: null });
     const isLogoTheme = currentTheme === 'logo';
+    const [couponDiscountValue, setCouponDiscountValue] = useState(0);
+    const [couponDiscountType, setCouponDiscountType] = useState('');
 
     useEffect(() => {
         // Extract URL parameters
@@ -149,6 +151,20 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
         setIsCouponValid(null);
     }
 
+    const calculateFinalPriceWithCoupon = () => {
+        if (isCouponValid !== true || couponDiscountValue === 0) {
+            return finalAmounts;
+        }
+
+        if (couponDiscountType === 'amount') {
+            // Direct amount discount
+            return Math.max(0, finalAmounts - couponDiscountValue);
+        }
+
+        return finalAmounts;
+    };
+
+
     const handleCheckCoupon = async (e) => {
         e.preventDefault();
         const body = {
@@ -162,6 +178,8 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
             const response = await axios.post(BASE_URL + `/student/coupon/verify`, body);
             if (response.data.errorCode === 0) {
                 setIsCouponValid(response.data?.valid);
+                setCouponDiscountValue(response.data?.discount || 0);
+                setCouponDiscountType(response.data?.type || '');
                 setErrorMessage("");
             } else {
                 setIsCouponValid(response.data?.valid === null ? false : response.data?.valid);
@@ -185,12 +203,12 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
             "email": email,
             "instId": instId,
             "campaignId": null,
-            "coupon": "",
+            coupon: isCouponValid === true ? couponNumber : "",
             "coursePricingId": 0,
             "entityModals": payloadCart
         }
 
-         console.log('body', body);
+        console.log('body', body);
         try {
             const response = await axios.post(BASE_URL + `/admin/payment/fetch-public-checkout-url`, body);
 
@@ -212,7 +230,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                 setEmail('')
                 setPayloadCart([])
                 setProceedToCheckoutModal(false)
-                
+
                 // Redirect back to store with URL parameters if they exist
                 const routeData = new URLSearchParams(window.location.search).get('isMobile');
                 if (urlParams.studentName || urlParams.contact || urlParams.email) {
@@ -679,7 +697,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
                                 WebkitTextFillColor: 'transparent',
                             }}
                         >
-                            ₹{finalAmounts.toFixed(2)}
+                            ₹{calculateFinalPriceWithCoupon().toFixed(2)}
                         </Typography>
                     </Box>
                 </Paper>

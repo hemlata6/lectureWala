@@ -51,7 +51,7 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
     const [shouldHideLayoutControls, setShouldHideLayoutControls] = useState(false);
     // console.log('instituteinstitute', institute, Endpoints, instituteAppSettingsModals);
 
-    console.log('studentInfo', studentInfo);
+    // console.log('studentInfo', studentInfo);
 
     // Check if layout controls should be hidden (from Store or CartPage with routeData)
     useEffect(() => {
@@ -499,7 +499,7 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
                                     {instituteAppSettingsModals?.logo ? (
                                         <img
                                             style={{ borderRadius: "8px", width: "80px", height: "80px" }}
-                                            src={Endpoints.mediaBaseUrl + instituteAppSettingsModals.logo}
+                                            src={instituteAppSettingsModals?.logo === '' ? '/logo-2.png' : Endpoints.mediaBaseUrl + instituteAppSettingsModals.logo}
                                             alt={institute?.institue || 'Logo'}
                                             className=""
                                         />
@@ -510,7 +510,7 @@ const UnifiedLayout = ({ children, currentPage, onPageChange, onAuthAction, isAu
                                             </>} */}
                                             <img
                                                 style={{ borderRadius: "8px" }}
-                                                src='/ps_logo.png'
+                                                src='/logo-2.png'
                                                 alt={institute?.institue || 'Logo'}
                                                 className=""
                                             />
