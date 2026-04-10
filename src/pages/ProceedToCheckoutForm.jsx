@@ -208,7 +208,7 @@ const ProceedToCheckoutForm = ({ cartCourses, setProceedToCheckoutModal }) => {
             "entityModals": payloadCart
         }
 
-        console.log('body', body);
+        // console.log('body', body);
         try {
             const response = await axios.post(BASE_URL + `/admin/payment/fetch-public-checkout-url`, body);
 

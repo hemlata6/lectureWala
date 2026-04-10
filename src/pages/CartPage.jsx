@@ -76,7 +76,7 @@ const CartPage = ({ onQuizNavigation }) => {
     useEffect(() => {
         // Only poll if payment drawer is open and we have a transactionId
         if (!paymentDrawerOpen || !checkoutResponse?.transactionId) {
-            console.log('Payment polling stopped - Drawer closed or no transaction ID');
+            // console.log('Payment polling stopped - Drawer closed or no transaction ID');
             return;
         }
 
@@ -165,7 +165,7 @@ const CartPage = ({ onQuizNavigation }) => {
                 setIsCouponValid(response.data?.valid);
                 setCouponDiscountValue(response.data?.discount || 0);
                 setCouponDiscountType(response.data?.type || '');
-                console.log('Coupon Check Response:', response.data);
+                // console.log('Coupon Check Response:', response.data);
                 setErrorMessage("");
             } else {
                 setIsCouponValid(response.data?.valid === null ? false : response.data?.valid);
@@ -191,7 +191,7 @@ const CartPage = ({ onQuizNavigation }) => {
                 setPaymentDrawerOpen(false);
 
             } else if (response?.data?.paymentStatus === 'pending') {
-                console.log('⏳ Payment still pending...');
+                // console.log('⏳ Payment still pending...');
             } else if (response?.data?.paymentStatus === 'failed') {
                 console.error('✗ PAYMENT FAILED');
             }
@@ -527,32 +527,32 @@ const CartPage = ({ onQuizNavigation }) => {
 
             const { type, url, data } = event.data;
 
-            console.log('Message received from iframe:', event.data);
+            // console.log('Message received from iframe:', event.data);
 
             if (type === 'paymentUrl' && url) {
-                console.log('Payment gateway sent new URL:', url);
+                // console.log('Payment gateway sent new URL:', url);
                 setPaymentUrl(url);
                 sessionStorage.setItem('iframeNewUrl', url);
             } else if (type === 'paymentData' && data) {
-                console.log('Payment data received:', data);
+                // console.log('Payment data received:', data);
                 sessionStorage.setItem('paymentData', JSON.stringify(data));
             } else if (type === 'redirectUrl' && url) {
-                console.log('Redirect URL from payment gateway:', url);
+                // console.log('Redirect URL from payment gateway:', url);
                 setPaymentUrl(url);
                 sessionStorage.setItem('paymentRedirectUrl', url);
             } else if (type === 'paymentSuccess') {
-                console.log('Payment completed successfully');
+                // console.log('Payment completed successfully');
                 sessionStorage.setItem('paymentStatus', 'completed');
                 sessionStorage.setItem('paymentResponse', JSON.stringify(data || {}));
             }
         };
 
         window.addEventListener('message', handleMessage);
-        console.log('Payment iframe message listener activated');
+        // console.log('Payment iframe message listener activated');
 
         return () => {
             window.removeEventListener('message', handleMessage);
-            console.log('Payment iframe message listener deactivated');
+            // console.log('Payment iframe message listener deactivated');
         };
     }, []);
 

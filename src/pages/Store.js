@@ -85,7 +85,7 @@ const Store = ({ onQuizNavigation, onSidebarToggle, onCourseExplore }) => {
 
   const primaryColor = getPrimaryColor();
 
-  console.log('isDarkMode', isDarkMode, primaryColor);
+  // console.log('isDarkMode', isDarkMode, primaryColor);
 
 
   // Convert hex color to RGB
